@@ -1,28 +1,13 @@
-print("Enter a bracket expression:")
-input_str = input()
-input_str += '#'
-i = 0
-sym = 'a'
-signs = "+-*/"
-letters = "abcdefghijklmnopqrstuvwxyz"
-
-
-def Letter(sym):
+import sys
+def letter(sym):
     if sym in letters:
-        return 1
-    else:
-        return 0
-
-def Sign(sym):
-    if sym in signs:
         return 1
     else:
         return 0
 
 class ParseError(Exception):
     def __init__(self):
-        print('error')
-
+        print('Error')
 
 def error():
     raise ParseError()
@@ -37,110 +22,43 @@ class MainClass():
     def new_lang(self):
         self.lang()
         if (sym == '#'):
-            return
-        error()
+            return error()
 
     def lang(self):
-        if Letter(sym):
+        if letter(sym):
+            read()
+            if sym == '=':
+                read()
+                if sym == '>':
+                    read()
+                else:
+                    error()
+            else:
+                error()
+            self.ending()
+        else:
+            error()
+            
+    def ending(self):
+        if letter(sym):
             read()
             self.end()
-        elif sym == '{':
-            read()
-            self.in_brackets()
-            if (sym == '}'):
-                read()
-            else:
-                error()
-            self.square()
-        elif sym == '[':
-            read()
-            self.in_brackets()
-            if (sym == ']'):
-                read()
-            else:
-                error()
-            self.circle()
         elif sym == '(':
             read()
-            self.in_brackets()
-            if (sym == ')'):
+            if letter(sym):
                 read()
-            else:
-                error()
-            self.curly()
-
-    def end(self):
-        if Sign(sym):
-            read()
-            if Letter(sym):
-                read()
-                self.end()
-            else:
-                error()
-
-    def in_brackets(self):
-        if Letter(sym):
-            read()
-            self.end()
-        elif sym == '{':
-            read()
-            self.in_brackets()
-            if (sym == '}'):
-                read()
-            else:
-                error()
-            if Sign(sym):
-                read()
-                if sym == '[':
+                if sym == '=':
                     read()
-                    self.in_brackets()
-                    if (sym == ']'):
+                    if sym == '>':
                         read()
+                        self.ending()
+                        if sym == ')':
+                            read()
+                            self.end()
+                        else:
+                            error()
                     else:
                         error()
-                    self.circle()
-                else:
-                    error()
-            else:
-                error()
-        elif sym == '[':
-            read()
-            self.in_brackets()
-            if (sym == ']'):
-                read()
-            else:
-                error()
-            if Sign(sym):
-                read()
-                if sym == '(':
-                    read()
-                    self.in_brackets()
-                    if (sym == ')'):
-                        read()
-                    else:
-                        error()
-                    self.curly()
-                else:
-                    error()
-            else:
-                error()
-        elif sym == ')':
-            read()
-            self.in_brackets()
-            if (sym == '}'):
-                read()
-            else:
-                error()
-            if Sign(sym):
-                read()
-                if sym == '{':
-                    read()
-                    self.in_brackets()
-                    if (sym == '}'):
-                        read()
-                    else:
-                        error()
-                    self.square()
                 else:
                     error()
             else:
@@ -148,60 +66,32 @@ class MainClass():
         else:
             error()
 
-    def square(self):
-        if Sign(sym):
+    def end(self):
+        if sym == '=':
             read()
-            if sym == "[":
+            if sym == '>':
                 read()
-                self.in_brackets()
-                if sym == "]":
-                    read()
-                    self.circle()
-                else:
-                    error()
+                self.ending()
             else:
                 error()
-
-    def circle(self):
-        if Sign(sym):
-            read()
-            if sym == "(":
-                read()
-                self.in_brackets()
-                if sym == ")":
-                    read()
-                    self.curly()
-                else:
-                    error()
-            else:
-                error()
-
-    def curly(self):
-        if Sign(sym):
-            read()
-            if sym == "{":
-                read()
-                self.in_brackets()
-                if sym == "}":
-                    read()
-                    self.square()
-                else:
-                    error()
-            else:
-                error()
-
-
+        elif sym == '#':
+            print("Succes")
+            sys.exit()
+        elif sym == ")":
+            pass
+        else:
+            error()
 def main():
-    global sym
+    print("Enter an expression with an implication:")
+    global sym, letters, i, input_str, m
+    i = 0
+    letters = "abcdefghijklmnopqrstuvwxyz"
+    input_str = input()
+    input_str += '#'
     sym = input_str[0]
     m = MainClass()
     try:
         m.new_lang()
     except ParseError:
-        print('false')
-        return
-    print('true')
-
-
+        print("You entered the wrong expression")
 main()
-input("press any key to exit...")
